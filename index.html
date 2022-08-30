@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--Make reference to alpineJs-->
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="stylesheet" href="app.css">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+
+    <!--Use axios to call the API-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="pizzaCart-api.js"></script>
+
+    <title>PerfectPizza!</title>
+</head>
+
+<body>
+    <div class="container">
+        <div x-data="pizzaCartWithAPIWidget">
+              <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">
+                    PerfectPizza <i class="bi bi-palette-fill"></i>ct, Pizza!
+                </a>
+                
+                <div class="collapse navbar-collapse" id="navbarNav" >
+                  <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li nav-item >
+                       <a class="nav-link active"><span x-text="username"></span> <span class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item active">
+                      <a class="nav-link active" x-on:click="OrderHistory" href="#">Prev(Orders) <span class="sr-only"></span></a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+            <br>
+            <div>
+                <label for="name">Who's Buying: </label>
+                <input type="text" name="name" id="name" x-model="userInput">
+                <button @click="createUser">Submit</button>
+            </div>
+            
+            <div x-text="message"></div>
+            <div x-text="username"></div>
+            <div x-text="cart_code"></div>
+            <div class="row">
+                <div class="col-12">
+
+                    <div style="padding:10px ;">
+                        <button class="btn btn-danger" @click="displayCart = !displayCart">
+                            <i class="bi bi-cart4"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="cart" x-show="displayCart">
+                        <h2 class="text-center">Shopping Cart: <span x-text="cart_code"></span> </h2>
+
+                        <table>
+                            <tr>
+                                <th>Flavour</th>
+                                <th>Qty</th>
+                                <th>Total</th>
+                            </tr>
+                            <template x-for="pizza in cartObj.pizzas">
+                                <tr>
+                                    <td x-text="pizza.flavour"></td>
+
+                                    <td>
+                                        <input type="button" value="+"
+                                            class="button-minus border rounded-circle  icon-shape icon-sm mx-1"
+                                            x-on:click="add(pizza)">
+                                        <span x-text="pizza.qty"></span>
+                                        <input type="button" value="-"
+                                            class="button-minus border rounded-circle  icon-shape icon-sm mx-1"
+                                            x-on:click="removeItem(pizza)">
+                                    </td>
+                                    <td x-text="pizza.total.toFixed(2)"></td>
+                                </tr>
+                            </template>
+                            <tr x-show="cartObj.total>0">
+                                <td colspan="2"><strong>Total Cost</strong></td>
+                                <td>
+                                    <strong>R<span x-text="cartObj.total.toFixed(2)"></span></strong>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan=" 2">
+                                <div x-show="checkOutPayment">
+                                    <div class="message" x-text="paymentMessage"></div>
+                                    <div>
+                                        <label for="">Payment amount</label>
+                                        <input class="input" type="number" placeholder="Payment amount" x-model="paymentAmount">
+                                        <button x-on:click="checkOutPizza" class="btn btn-outline-success"" >
+                                            <i class="bi bi-cart4"></i>
+                                            Pay Now
+                                        </button>
+                                    </div>
+                                    <div>
+
+                                    </div>
+                                </div>
+                                </td>
+                                <td>
+                                    <button style="margin: 3px;" class="btn btn-outline-info" x-show="cartObj.total.toFixed(2)>0"
+                                        x-on:click="checkOutPayment=true" class="btn">
+                                        Check-Out</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+
+                
+            <div class="container" style="margin-top: 5%;">
+                <div class="row g-3 justify-content-center">
+                    <h2 class="text-center">pizzas you can order</h2>
+                    <template x-for="pizza in featured">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card shadow">
+
+                                <div class="inner">
+                                    <img src="./images/fernando-andrade-_P76trHTWDE-unsplash.jpg" alt="pizza image"
+                                        class="card-img-top">
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title" x-text="`${pizza.flavour}`"></h5>
+                                    <span class="display-6">R <span x-text=`${pizza.price}`></span></span>
+                                    <p class="card-text">
+                                        
+                                    </p>
+                                    <button class="btn btn-success" x-on:click="add(pizza)">Buy Pizza..</button>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+
+
+            <table class="center" style="border-collapse: separate; border-spacing: 0 15px;">
+                <template x-for="pizza in pizzas">
+                    <tr>
+                        <div>
+<!--                             <td>
+                                <img src="./images/pizzaimg.png" alt="" height=50 width=50 style="border-radius: 60%;">
+                            </td>  -->
+                            <td>
+                                <img x-bind:src="`./images/${pizza.size}.jfif`" alt="" height=50 width=50 style="border-radius: 50%;">
+                            </td>
+                            <td x-text="pizza.flavour"></td>
+                            <td x-text="pizza.size"></td>
+                            <td x-text="pizza.price"></td>
+                            <td>
+                                <button class="btn btn-outline-primary" x-on:click="add(pizza)">Add to cart</button>
+                            </td>
+                        </div>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

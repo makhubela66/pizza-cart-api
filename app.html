@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <!--Use axios to call the API-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div x-data="{
+        message:'fefffefefe',
+        pizzas:['',''],
+        func(){
+            console.log(this.message)
+        }
+    }">
+        <div ></div>
+        <button x-on:click="func"></button>
+        <h2 class="text-center">pizzas you can order</h2>
+        <template>
+            <div class="bg-danger" x-text="message"></div>
+        </template>
+<!--         <template x-for="pizza in pizzas">
+            <h3 x-text="pizza.flavour"></h3>
+            <h3 x-text="pizza.size"></h3>
+            <h4 x-text="pizza.price"></h4>
+            <button>Buy</button>
+        </template> -->
+    </div>
+</body>
+    
+</html>
+
+    

@@ -1,0 +1,47 @@
+.cart{
+    border: 1px solid;
+    background-color: blueviolet;
+    margin: 1em;
+    padding: 1em;
+    width: 50em;
+}
+.card{
+    width: 20rem;
+}
+.message {
+    padding: 1em;
+    font-weight: bold;
+    background-color: orange
+}
+.inner{
+    overflow: hidden;
+}
+
+.inner img{
+    transition: all 1.5s ease;
+}
+
+.inner:hover img{
+    transform: scale(1.5);
+}
+
+
+
+tr:nth-child(even) {
+    background-color: yellowgreen;
+}
+
+tr:nth-child(odd) {
+    background-color:aquamarine;
+}
+
+tr:hover {background-color: #c9c9cf;}
+
+table{
+    width:80%;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+  }
